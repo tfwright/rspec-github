@@ -18,12 +18,14 @@ module RSpec
       end
 
       def dump_failures(examples_notification)
+        output << "\n"
         examples_notification.failure_notifications.each do |failure_notification|
           location = failure_notification.example.location
           message = failure_notification.message_lines.first
 
-          output << "\n#{location} | #{message}\n"
+          output << "F#{location} | #{message}\n"
         end
+        output << "\n"
       end
 
       private
