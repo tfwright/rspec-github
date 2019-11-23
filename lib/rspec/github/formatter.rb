@@ -20,7 +20,7 @@ module RSpec
       def dump_failures(examples_notification)
         examples_notification.failure_notifications.each do |failure_notification|
           location = failure_notification.example.location
-          message = failure_notification.message_lines.join("\r\n")
+          message = failure_notification.message_lines.first
 
           output << "\n#{location} | #{message}\n"
         end
