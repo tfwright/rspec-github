@@ -1,4 +1,5 @@
 require "rspec/github/version"
+require "rspec/github/formatter"
 
 module RSpec
   module GitHub

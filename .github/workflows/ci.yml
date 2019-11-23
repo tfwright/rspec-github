@@ -1,0 +1,29 @@
+name: "Tests"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/cache@preview
+      id: cache
+      with:
+        path: ~/local/rubies
+        key: ruby-2.6.5
+    - uses: clupprich/ruby-build-action@master
+      id: ruby
+      with:
+        ruby-version: 2.6.5
+        cache-available: ${{ steps.cache.outputs.cache-hit == 'true' }}
+    - name: setup
+      run: |
+        gem install bundler:2.0.2
+        bundle
+    - name: rspec
+      run: bundle exec rspec --require ./lib/rspec/github/formatter --format RSpec::GitHub::Formatter
