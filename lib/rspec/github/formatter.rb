@@ -3,7 +3,7 @@ require 'rspec/core/formatters'
 module RSpec
   module GitHub
     class Formatter
-      RSpec::Core::Formatters.register self, :start, :close, :example_failed, :example_pending
+      RSpec::Core::Formatters.register self, :start, :close, :dump_failures
 
       def initialize(output)
         @output = output || StringIO.new
@@ -17,14 +17,13 @@ module RSpec
         restore_sync_output
       end
 
-      def example_failed(failed_example_notification)
-        metadata = failed_example_notification.example.metadata
-        error = error(file: metadata[:file_path], line_number: metadata[:line_number], message: failed_example_notification.message_lines.join("\r\n"))
-        output << "\n#{error}\n"
-      end
+      def dump_failures(examples_notification)
+        examples_notification.failure_notifications.each do |failure_notification|
+          location = failure_notification.example.location
+          message = failure_notification.message_lines.join("\r\n")
 
-      def example_pending(examle_notification)
-
+          output << "\n#{location} | #{message}\n"
+        end
       end
 
       private
@@ -41,14 +40,6 @@ module RSpec
 
       def output_supports_sync
         output.respond_to?(:sync=)
-      end
-
-      def error(file:, line_number:, message:)
-        "::error file=#{file},line=#{line_number}::#{message}"
-      end
-
-      def warning()
-
       end
     end
   end
