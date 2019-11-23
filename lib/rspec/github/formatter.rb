@@ -19,7 +19,7 @@ module RSpec
 
       def example_failed(failed_example_notification)
         metadata = failed_example_notification.example.metadata
-        error = error(file: metadata[:file_path], line_number: metadata[:line_number], message: "error")
+        error = error(file: metadata[:file_path], line_number: metadata[:line_number], message: failed_example_notification.message_lines.join("\r\n"))
         output << "\n#{error}\n"
       end
 
